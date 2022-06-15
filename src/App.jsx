@@ -2,6 +2,14 @@ import * as React from "react"
 // IMPORT ANY NEEDED COMPONENTS HERE
 import { createDataSet } from "./data/dataset"
 import "./App.css"
+import Header from  "./components/Header/Header"
+import Instructions from "./components/Instructions/Instructions"
+import Chip from "./components/Chip/Chip"
+import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel"
+import CategoriesColumn from "./components/CategoriesColumn/CategoriesColumn"
+import RestaurantsRows from "./components/RestaurantsRows/RestaurantsRows"
+import MenuDisplay from "./components/MenuDisplay/MenuDisplay"
+import DataSource from "./components/DataSource/DataSource"
 
 // don't move this!
 export const appInfo = {
@@ -19,44 +27,65 @@ export const appInfo = {
 }
 // or this!
 const { data, categories, restaurants } = createDataSet()
-
+let selectedACategory = false
+let selectedARestaurant = false
+let selectedAnItem = false
 export function App() {
+
+  const [selectedCategory, setSelectedCategory] = React.useState();
+  const selectCategory = (e) => {
+    setSelectedCategory(e)
+    selectMenuItem(null)
+    selectedACategory = e == null ? false : true
+    controlInstructions()
+  }
+  const deselectCategory = () => {
+    selectCategory(null)
+  }
+  const [selectedRestaurant, setSelectedRestaurant] = React.useState();
+  const selectRestaurant = (e) => {
+    setSelectedRestaurant(e)
+    selectMenuItem(null)
+    selectedARestaurant = e == null ? false : true
+    controlInstructions()
+  }
+  const deselectRestaurant = () => {
+    selectRestaurant(null)
+  }
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState();
+  const selectMenuItem = (e) => {
+    setSelectedMenuItem(e)
+    selectedAnItem = e == null ? false : true
+    controlInstructions()
+  }
+  const deselectMenu = () => {
+    selectMenuItem(null)
+  }
+  const [instruction, setInstruction] = React.useState("start");
+  
+  
+   function controlInstructions(){
+    if(!(selectedACategory || selectedARestaurant) && !selectedAnItem) setInstruction("start")
+    else if(selectedACategory && !(selectedARestaurant || selectedAnItem)) setInstruction("onlyCategory")
+    else if(selectedARestaurant && !(selectedACategory || selectedAnItem)) setInstruction("onlyRestaurant")
+    else if(selectedACategory && selectedARestaurant && !selectedAnItem) setInstruction("noSelectedItem")
+    else setInstruction("allSelected")
+  }
+
+  const currentMenuItems = data.filter((menuItem) => {return menuItem.food_category === selectedCategory && menuItem.restaurant === selectedRestaurant})
   return (
     <main className="App">
-      {/* CATEGORIES COLUMN */}
-      <div className="CategoriesColumn col">
-        <div className="categories options">
-          <h2 className="title">Categories</h2>
-          {/* YOUR CODE HERE */}
-        </div>
-      </div>
-
+      <CategoriesColumn  categorie={categories} selectedCategor={selectedCategory} selectCategor={selectCategory} deselectCategor={deselectCategory}/>
       {/* MAIN COLUMN */}
       <div className="container">
         {/* HEADER GOES HERE */}
-
-        {/* RESTAURANTS ROW */}
-        <div className="RestaurantsRow">
-          <h2 className="title">Restaurants</h2>
-          <div className="restaurants options">{/* YOUR CODE HERE */}</div>
-        </div>
-
+        < Header title={appInfo.title} tagline={appInfo.tagline} description={appInfo.description}/>
+        <RestaurantsRows restauran={restaurants} selectedRestauran={selectedRestaurant} selectRestauran={selectRestaurant} deselectRestauran={deselectRestaurant}/>
         {/* INSTRUCTIONS GO HERE */}
+        <Instructions details={appInfo.instructions[instruction]}/>
+        <MenuDisplay currentMenuItem={currentMenuItems} selectedMenuIte={selectedMenuItem} selectMenuIte={selectMenuItem} deselectMen={deselectMenu} />
+        <DataSource dataSourc={appInfo.dataSource} />
 
-        {/* MENU DISPLAY */}
-        <div className="MenuDisplay display">
-          <div className="MenuItemButtons menu-items">
-            <h2 className="title">Menu Items</h2>
-            {/* YOUR CODE HERE */}
-          </div>
-
-          {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
-        </div>
-
-        <div className="data-sources">
-          <p>{appInfo.dataSource}</p>
-        </div>
       </div>
     </main>
   )
