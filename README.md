@@ -10,7 +10,8 @@ They've sourced their nutrition data, bootstrapped a React application, and even
 
 Follow the instructions available on the [course portal](https://courses.codepath.org/courses/summer_internship_for_tech_excellence/unit/2#!lab1)
 
-![fast-food](https://user-images.githubusercontent.com/54002497/174930508-0bc9c1ae-ff77-4801-a856-8fb68f3f37d5.gif)
+
+![Fast-Food-Feud-Lab-8-July-2022](https://user-images.githubusercontent.com/54002497/178085603-d01fe70e-cf18-43a1-8933-c5eef3292762.gif)
 
 
 ## Setting up the lab
